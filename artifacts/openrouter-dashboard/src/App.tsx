@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/Layout";
 import Home from "@/pages/Home";
+import Keys from "@/pages/Keys";
 import CalculatorPage from "@/pages/Calculator";
-import Models from "@/pages/Models";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/not-found";
 
@@ -23,8 +23,8 @@ function Router() {
     <Layout>
       <Switch>
         <Route path="/" component={Home} />
+        <Route path="/keys" component={Keys} />
         <Route path="/calculator" component={CalculatorPage} />
-        <Route path="/models" component={Models} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
       </Switch>

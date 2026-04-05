@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 const API_KEY_STORAGE = "openrouter_api_key";
+const MANAGEMENT_KEY_STORAGE = "openrouter_management_key";
 const SELECTED_MODEL_STORAGE = "openrouter_selected_model";
 
 export function useApiKey() {
@@ -18,6 +19,23 @@ export function useApiKey() {
   };
 
   return { apiKey, setApiKey };
+}
+
+export function useManagementKey() {
+  const [managementKey, setManagementKeyState] = useState<string>(() => {
+    return localStorage.getItem(MANAGEMENT_KEY_STORAGE) || "";
+  });
+
+  const setManagementKey = (key: string) => {
+    setManagementKeyState(key);
+    if (key) {
+      localStorage.setItem(MANAGEMENT_KEY_STORAGE, key);
+    } else {
+      localStorage.removeItem(MANAGEMENT_KEY_STORAGE);
+    }
+  };
+
+  return { managementKey, setManagementKey };
 }
 
 export function useSelectedModel() {

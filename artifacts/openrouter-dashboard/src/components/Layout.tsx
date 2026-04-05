@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { LayoutDashboard, Calculator, Cpu, Settings, Sun, Moon, Zap } from "lucide-react";
+import { LayoutDashboard, Calculator, Key, Settings, Sun, Moon, Zap } from "lucide-react";
 import { useTheme } from "@/lib/store";
 
 interface LayoutProps {
@@ -8,8 +8,8 @@ interface LayoutProps {
 
 const navItems = [
   { path: "/", icon: LayoutDashboard, label: "Главная" },
+  { path: "/keys", icon: Key, label: "Ключи" },
   { path: "/calculator", icon: Calculator, label: "Калькулятор" },
-  { path: "/models", icon: Cpu, label: "Модели" },
   { path: "/settings", icon: Settings, label: "Настройки" },
 ];
 

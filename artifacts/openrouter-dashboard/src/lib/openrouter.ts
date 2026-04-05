@@ -23,6 +23,101 @@ export async function fetchKeyInfo(apiKey: string): Promise<KeyInfo> {
   return data.data;
 }
 
+/* ── Management API ─────────────────────────────────────────────── */
+
+export interface ProvisionedKey {
+  hash: string;
+  name: string;
+  label: string;
+  key_id: string;          // partial key shown in UI
+  usage: number;           // USD spent
+  limit: number | null;
+  disabled: boolean;
+  created_at: string;
+  updated_at: string;
+  rate_limit?: {
+    requests: number;
+    interval: string;
+  };
+}
+
+export interface CreateKeyRequest {
+  name: string;
+  label?: string;
+  limit?: number | null;    // USD credit limit; null = unlimited
+}
+
+export interface CreatedKey extends ProvisionedKey {
+  key: string;              // full key — shown only once on creation
+}
+
+function mgmtHeaders(managementKey: string) {
+  return {
+    Authorization: `Bearer ${managementKey}`,
+    "Content-Type": "application/json",
+  };
+}
+
+async function mgmtThrow(res: Response) {
+  const err = await res.json().catch(() => ({}));
+  throw new Error(
+    (err as { error?: { message?: string } | string }).error
+      ? typeof (err as { error: unknown }).error === "string"
+        ? (err as { error: string }).error
+        : ((err as { error: { message?: string } }).error?.message ?? `HTTP ${res.status}`)
+      : `HTTP ${res.status}`,
+  );
+}
+
+export async function listProvisionedKeys(managementKey: string): Promise<ProvisionedKey[]> {
+  const res = await fetch("https://openrouter.ai/api/v1/keys", {
+    headers: mgmtHeaders(managementKey),
+  });
+  if (!res.ok) await mgmtThrow(res);
+  const data = await res.json() as { data: ProvisionedKey[] };
+  return data.data ?? [];
+}
+
+export async function createProvisionedKey(
+  managementKey: string,
+  req: CreateKeyRequest,
+): Promise<CreatedKey> {
+  const res = await fetch("https://openrouter.ai/api/v1/keys", {
+    method: "POST",
+    headers: mgmtHeaders(managementKey),
+    body: JSON.stringify(req),
+  });
+  if (!res.ok) await mgmtThrow(res);
+  const data = await res.json() as { data: CreatedKey } | CreatedKey;
+  return ("data" in data ? data.data : data) as CreatedKey;
+}
+
+export async function deleteProvisionedKey(
+  managementKey: string,
+  keyHash: string,
+): Promise<void> {
+  const res = await fetch(`https://openrouter.ai/api/v1/keys/${keyHash}`, {
+    method: "DELETE",
+    headers: mgmtHeaders(managementKey),
+  });
+  if (!res.ok) await mgmtThrow(res);
+}
+
+export async function updateProvisionedKey(
+  managementKey: string,
+  keyHash: string,
+  updates: Partial<Pick<ProvisionedKey, "name" | "label" | "limit" | "disabled">>,
+): Promise<ProvisionedKey> {
+  const res = await fetch(`https://openrouter.ai/api/v1/keys/${keyHash}`, {
+    method: "PATCH",
+    headers: mgmtHeaders(managementKey),
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) await mgmtThrow(res);
+  const data = await res.json() as { data: ProvisionedKey } | ProvisionedKey;
+  return ("data" in data ? data.data : data) as ProvisionedKey;
+}
+
 export interface OpenRouterModel {
   id: string;
   name: string;
