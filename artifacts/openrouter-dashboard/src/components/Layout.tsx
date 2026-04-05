@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { Calculator, Cpu, Settings, Sun, Moon, Zap } from "lucide-react";
+import { LayoutDashboard, Calculator, Cpu, Settings, Sun, Moon, Zap } from "lucide-react";
 import { useTheme } from "@/lib/store";
 
 interface LayoutProps {
@@ -7,7 +7,8 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { path: "/", icon: Calculator, label: "Калькулятор" },
+  { path: "/", icon: LayoutDashboard, label: "Главная" },
+  { path: "/calculator", icon: Calculator, label: "Калькулятор" },
   { path: "/models", icon: Cpu, label: "Модели" },
   { path: "/settings", icon: Settings, label: "Настройки" },
 ];
@@ -35,7 +36,7 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 key={path}
                 onClick={() => setLocation(path)}
-                data-testid={`nav-${path === "/" ? "calculator" : path.slice(1)}`}
+                data-testid={`nav-${path === "/" ? "home" : path.slice(1)}`}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-sidebar-primary text-sidebar-primary-foreground"
@@ -91,13 +92,13 @@ export default function Layout({ children }: LayoutProps) {
             <button
               key={path}
               onClick={() => setLocation(path)}
-              data-testid={`nav-mobile-${path === "/" ? "calculator" : path.slice(1)}`}
-              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 transition-colors ${
+              data-testid={`nav-mobile-${path === "/" ? "home" : path.slice(1)}`}
+              className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 transition-colors ${
                 isActive ? "text-primary" : "text-sidebar-foreground/50 hover:text-sidebar-foreground"
               }`}
             >
               <Icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium leading-none">{label}</span>
+              <span className="text-[9px] font-medium leading-none">{label}</span>
             </button>
           );
         })}

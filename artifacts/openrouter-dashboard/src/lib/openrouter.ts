@@ -1,3 +1,28 @@
+export interface KeyInfo {
+  label: string;
+  usage: number;
+  limit: number | null;
+  is_free_tier: boolean;
+  rate_limit: {
+    requests: number;
+    interval: string;
+  };
+}
+
+export async function fetchKeyInfo(apiKey: string): Promise<KeyInfo> {
+  const res = await fetch("https://openrouter.ai/api/v1/auth/key", {
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+    },
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error((err as { error?: { message?: string } }).error?.message || `HTTP ${res.status}`);
+  }
+  const data = await res.json() as { data: KeyInfo };
+  return data.data;
+}
+
 export interface OpenRouterModel {
   id: string;
   name: string;
