@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { MessageSquare, Cpu, Settings, Sun, Moon, Zap } from "lucide-react";
+import { Calculator, Cpu, Settings, Sun, Moon, Zap } from "lucide-react";
 import { useTheme } from "@/lib/store";
 
 interface LayoutProps {
@@ -7,7 +7,7 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { path: "/", icon: MessageSquare, label: "Chat" },
+  { path: "/", icon: Calculator, label: "Calculator" },
   { path: "/models", icon: Cpu, label: "Models" },
   { path: "/settings", icon: Settings, label: "Settings" },
 ];

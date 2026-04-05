@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Layout from "@/components/Layout";
-import Chat from "@/pages/Chat";
+import CalculatorPage from "@/pages/Calculator";
 import Models from "@/pages/Models";
 import Settings from "@/pages/Settings";
 import NotFound from "@/pages/not-found";
@@ -21,7 +21,7 @@ function Router() {
   return (
     <Layout>
       <Switch>
-        <Route path="/" component={Chat} />
+        <Route path="/" component={CalculatorPage} />
         <Route path="/models" component={Models} />
         <Route path="/settings" component={Settings} />
         <Route component={NotFound} />
