@@ -39,13 +39,13 @@ export default function Models() {
           <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mx-auto mb-4">
             <Cpu className="w-6 h-6 text-muted-foreground" />
           </div>
-          <h2 className="text-lg font-semibold text-foreground mb-2">No API Key</h2>
-          <p className="text-sm text-muted-foreground mb-4">Add your OpenRouter API key in Settings to browse available models.</p>
+          <h2 className="text-lg font-semibold text-foreground mb-2">Нет API-ключа</h2>
+          <p className="text-sm text-muted-foreground mb-4">Добавьте ключ OpenRouter в настройках, чтобы просматривать модели.</p>
           <button
             onClick={() => setLocation("/settings")}
             className="w-full sm:w-auto px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
           >
-            Go to Settings
+            Перейти в настройки
           </button>
         </div>
       </div>
@@ -54,9 +54,8 @@ export default function Models() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      {/* Header */}
       <div className="h-12 sm:h-14 border-b border-border flex items-center px-4 sm:px-5 gap-3 flex-shrink-0">
-        <h1 className="text-sm sm:text-base font-semibold text-foreground">Models</h1>
+        <h1 className="text-sm sm:text-base font-semibold text-foreground">Модели</h1>
         {models && (
           <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
             {filtered.length} / {models.length}
@@ -67,7 +66,7 @@ export default function Models() {
           <input
             data-testid="input-model-search"
             type="search"
-            placeholder="Search..."
+            placeholder="Поиск..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-8 pr-7 py-1.5 rounded-lg border border-input bg-background text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
@@ -80,7 +79,6 @@ export default function Models() {
         </div>
       </div>
 
-      {/* List */}
       <div className="flex-1 overflow-y-auto scrollbar-thin">
         {isLoading && (
           <div className="p-4 space-y-2">
@@ -95,7 +93,7 @@ export default function Models() {
             <div className="flex items-start gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-sm">Failed to load models</p>
+                <p className="font-medium text-sm">Не удалось загрузить модели</p>
                 <p className="text-sm opacity-80 mt-0.5">{error.message}</p>
               </div>
             </div>
@@ -103,7 +101,9 @@ export default function Models() {
         )}
 
         {!isLoading && !error && filtered.length === 0 && search && (
-          <div className="p-10 text-center text-muted-foreground text-sm">No models match &ldquo;{search}&rdquo;</div>
+          <div className="p-10 text-center text-muted-foreground text-sm">
+            По запросу &laquo;{search}&raquo; ничего не найдено
+          </div>
         )}
 
         {!isLoading && filtered.length > 0 && (
@@ -154,29 +154,27 @@ function ModelRow({
           <p className="text-sm font-medium text-foreground truncate">{model.name}</p>
           {isSelected && (
             <span className="text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded font-medium flex-shrink-0">
-              Active
+              Выбрана
             </span>
           )}
         </div>
         <p className="text-xs text-muted-foreground font-mono truncate hidden sm:block">{model.id}</p>
-        {/* Mobile-only compact pricing */}
         <p className="text-xs text-muted-foreground sm:hidden">
-          {inputPrice} in · {outputPrice} out
+          {inputPrice} вх · {outputPrice} вых
         </p>
       </div>
-      {/* Desktop pricing columns */}
       <div className="hidden sm:flex items-center gap-4 text-xs text-muted-foreground flex-shrink-0">
         <div className="text-right">
           <p className="text-foreground font-medium">{formatContextLength(model.context_length)}</p>
-          <p>context</p>
+          <p>контекст</p>
         </div>
         <div className="text-right">
           <p className="text-foreground font-medium">{inputPrice}</p>
-          <p>input</p>
+          <p>входящие</p>
         </div>
         <div className="text-right">
           <p className="text-foreground font-medium">{outputPrice}</p>
-          <p>output</p>
+          <p>исходящие</p>
         </div>
       </div>
       <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />

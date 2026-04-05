@@ -7,9 +7,9 @@ interface LayoutProps {
 }
 
 const navItems = [
-  { path: "/", icon: Calculator, label: "Calculator" },
-  { path: "/models", icon: Cpu, label: "Models" },
-  { path: "/settings", icon: Settings, label: "Settings" },
+  { path: "/", icon: Calculator, label: "Калькулятор" },
+  { path: "/models", icon: Cpu, label: "Модели" },
+  { path: "/settings", icon: Settings, label: "Настройки" },
 ];
 
 export default function Layout({ children }: LayoutProps) {
@@ -19,7 +19,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="flex h-screen bg-background overflow-hidden">
 
-      {/* ── Desktop sidebar ─────────────────────────────────────────── */}
+      {/* ── Боковая панель (десктоп) ────────────────────────────────── */}
       <aside className="hidden md:flex w-56 flex-shrink-0 bg-sidebar border-r border-sidebar-border flex-col">
         <div className="h-14 flex items-center gap-2.5 px-4 border-b border-sidebar-border">
           <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
@@ -35,7 +35,7 @@ export default function Layout({ children }: LayoutProps) {
               <button
                 key={path}
                 onClick={() => setLocation(path)}
-                data-testid={`nav-${label.toLowerCase()}`}
+                data-testid={`nav-${path === "/" ? "calculator" : path.slice(1)}`}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-sidebar-primary text-sidebar-primary-foreground"
@@ -56,12 +56,12 @@ export default function Layout({ children }: LayoutProps) {
             className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
           >
             {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            {theme === "dark" ? "Light mode" : "Dark mode"}
+            {theme === "dark" ? "Светлая тема" : "Тёмная тема"}
           </button>
         </div>
       </aside>
 
-      {/* ── Mobile top header ────────────────────────────────────────── */}
+      {/* ── Шапка (мобильный) ────────────────────────────────────────── */}
       <div className="md:hidden fixed top-0 inset-x-0 z-30 h-12 flex items-center justify-between px-4 bg-sidebar border-b border-sidebar-border">
         <div className="flex items-center gap-2">
           <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
@@ -78,12 +78,12 @@ export default function Layout({ children }: LayoutProps) {
         </button>
       </div>
 
-      {/* ── Main content ─────────────────────────────────────────────── */}
+      {/* ── Контент ──────────────────────────────────────────────────── */}
       <main className="flex-1 overflow-hidden flex flex-col pt-12 md:pt-0 pb-16 md:pb-0">
         {children}
       </main>
 
-      {/* ── Mobile bottom navigation ─────────────────────────────────── */}
+      {/* ── Нижняя навигация (мобильный) ─────────────────────────────── */}
       <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 h-16 bg-sidebar border-t border-sidebar-border flex items-center">
         {navItems.map(({ path, icon: Icon, label }) => {
           const isActive = path === "/" ? location === "/" : location.startsWith(path);
@@ -91,11 +91,9 @@ export default function Layout({ children }: LayoutProps) {
             <button
               key={path}
               onClick={() => setLocation(path)}
-              data-testid={`nav-mobile-${label.toLowerCase()}`}
+              data-testid={`nav-mobile-${path === "/" ? "calculator" : path.slice(1)}`}
               className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 transition-colors ${
-                isActive
-                  ? "text-primary"
-                  : "text-sidebar-foreground/50 hover:text-sidebar-foreground"
+                isActive ? "text-primary" : "text-sidebar-foreground/50 hover:text-sidebar-foreground"
               }`}
             >
               <Icon className="w-5 h-5" />
