@@ -124,6 +124,74 @@ export async function updateProvisionedKey(
   return ("data" in data ? data.data : data) as ProvisionedKey;
 }
 
+/* ── Per-key usage stats ────────────────────────────────────────── */
+
+export interface ModelUsageStat {
+  model: string;
+  requests: number;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  cost: number; // USD
+}
+
+export interface KeyUsageStats {
+  total_requests: number;
+  total_prompt_tokens: number;
+  total_completion_tokens: number;
+  total_cost: number;
+  models: ModelUsageStat[];
+}
+
+export async function fetchKeyUsageStats(
+  managementKey: string,
+  keyHash: string,
+): Promise<KeyUsageStats | null> {
+  // Try the per-key stats endpoint
+  try {
+    const res = await fetch(`https://openrouter.ai/api/v1/keys/${keyHash}`, {
+      headers: mgmtHeaders(managementKey),
+    });
+    if (!res.ok) return null;
+    const raw = await res.json() as Record<string, unknown>;
+    const payload = (raw.data && typeof raw.data === "object" ? raw.data : raw) as Record<string, unknown>;
+
+    // If API returns usage breakdown by model
+    if (Array.isArray(payload.usage_by_model)) {
+      const models = (payload.usage_by_model as Record<string, number>[]).map(m => ({
+        model: String(m.model ?? m.id ?? "unknown"),
+        requests: Number(m.requests ?? 0),
+        prompt_tokens: Number(m.prompt_tokens ?? 0),
+        completion_tokens: Number(m.completion_tokens ?? 0),
+        total_tokens: Number((m.prompt_tokens ?? 0) + (m.completion_tokens ?? 0)),
+        cost: Number(m.cost ?? m.usage ?? 0),
+      }));
+      return {
+        total_requests: models.reduce((s, m) => s + m.requests, 0),
+        total_prompt_tokens: models.reduce((s, m) => s + m.prompt_tokens, 0),
+        total_completion_tokens: models.reduce((s, m) => s + m.completion_tokens, 0),
+        total_cost: models.reduce((s, m) => s + m.cost, 0),
+        models,
+      };
+    }
+
+    // Flat stats — some fields may be present
+    const total_requests = Number(payload.total_requests ?? payload.requests ?? 0);
+    const prompt_tokens = Number(payload.prompt_tokens ?? 0);
+    const completion_tokens = Number(payload.completion_tokens ?? 0);
+    if (total_requests > 0 || prompt_tokens > 0) {
+      return {
+        total_requests,
+        total_prompt_tokens: prompt_tokens,
+        total_completion_tokens: completion_tokens,
+        total_cost: Number(payload.usage ?? 0),
+        models: [],
+      };
+    }
+  } catch { /* ignore */ }
+  return null;
+}
+
 export interface OpenRouterModel {
   id: string;
   name: string;
