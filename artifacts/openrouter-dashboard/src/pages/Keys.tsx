@@ -42,27 +42,42 @@ function CopyButton({ text }: { text: string }) {
 /* ── Компонент: карточка нового ключа ────────────────────────────── */
 function NewKeyBanner({ keyData, onClose }: { keyData: CreatedKey; onClose: () => void }) {
   const [show, setShow] = useState(false);
+  const fullKey = keyData.key ?? "";
+  const masked = fullKey ? fullKey.slice(0, 12) + "•".repeat(20) : "(ключ не получен — проверьте консоль)";
+
   return (
     <div className="rounded-xl border border-green-500/30 bg-green-500/10 p-4 space-y-3">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-          <Check className="w-4 h-4" />
-          <span className="text-sm font-semibold">Ключ создан! Сохраните его — он показывается только один раз</span>
+          <Check className="w-4 h-4 flex-shrink-0" />
+          <span className="text-sm font-semibold">
+            {fullKey ? "Ключ создан! Сохраните его — он показывается только один раз" : "Ключ создан"}
+          </span>
         </div>
-        <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-xs underline">
+        <button onClick={onClose} className="text-muted-foreground hover:text-foreground text-xs underline flex-shrink-0">
           Закрыть
         </button>
       </div>
-      <div className="flex items-center gap-2 rounded-lg bg-background/70 px-3 py-2 border border-border">
-        <code className="flex-1 text-xs font-mono text-foreground break-all select-all">
-          {show ? keyData.key : keyData.key.slice(0, 12) + "•".repeat(20)}
-        </code>
-        <button onClick={() => setShow(v => !v)} className="text-muted-foreground hover:text-foreground p-1">
-          {show ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-        </button>
-        <CopyButton text={keyData.key} />
-      </div>
-      <p className="text-xs text-muted-foreground">Название: <span className="font-medium text-foreground">{keyData.name}</span></p>
+
+      {fullKey ? (
+        <div className="flex items-center gap-2 rounded-lg bg-background/70 px-3 py-2 border border-border">
+          <code className="flex-1 text-xs font-mono text-foreground break-all select-all">
+            {show ? fullKey : masked}
+          </code>
+          <button onClick={() => setShow(v => !v)} className="text-muted-foreground hover:text-foreground p-1">
+            {show ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+          </button>
+          <CopyButton text={fullKey} />
+        </div>
+      ) : (
+        <p className="text-xs text-muted-foreground">
+          OpenRouter не вернул значение ключа в ответе. Скопируйте его в интерфейсе openrouter.ai.
+        </p>
+      )}
+
+      <p className="text-xs text-muted-foreground">
+        Название: <span className="font-medium text-foreground">{keyData.name || "(без названия)"}</span>
+      </p>
     </div>
   );
 }

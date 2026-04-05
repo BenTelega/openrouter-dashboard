@@ -88,8 +88,14 @@ export async function createProvisionedKey(
     body: JSON.stringify(req),
   });
   if (!res.ok) await mgmtThrow(res);
-  const data = await res.json() as { data: CreatedKey } | CreatedKey;
-  return ("data" in data ? data.data : data) as CreatedKey;
+  const raw = await res.json() as Record<string, unknown>;
+  // OpenRouter may return { data: {...} } or the object directly
+  const payload = (raw.data && typeof raw.data === "object"
+    ? raw.data
+    : raw) as Record<string, unknown>;
+  // key may also live at the top level alongside data
+  const key = (payload.key ?? raw.key ?? "") as string;
+  return { ...payload, key } as unknown as CreatedKey;
 }
 
 export async function deleteProvisionedKey(
