@@ -34,8 +34,8 @@ export default function Models() {
 
   if (!apiKey) {
     return (
-      <div className="flex-1 flex items-center justify-center">
-        <div className="text-center max-w-sm">
+      <div className="flex-1 flex items-center justify-center px-4">
+        <div className="text-center max-w-xs w-full">
           <div className="w-12 h-12 rounded-xl bg-muted flex items-center justify-center mx-auto mb-4">
             <Cpu className="w-6 h-6 text-muted-foreground" />
           </div>
@@ -43,7 +43,7 @@ export default function Models() {
           <p className="text-sm text-muted-foreground mb-4">Add your OpenRouter API key in Settings to browse available models.</p>
           <button
             onClick={() => setLocation("/settings")}
-            className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+            className="w-full sm:w-auto px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
           >
             Go to Settings
           </button>
@@ -54,22 +54,23 @@ export default function Models() {
 
   return (
     <div className="flex-1 overflow-hidden flex flex-col">
-      <div className="h-14 border-b border-border flex items-center px-5 gap-3 flex-shrink-0">
-        <h1 className="text-base font-semibold text-foreground">Models</h1>
+      {/* Header */}
+      <div className="h-12 sm:h-14 border-b border-border flex items-center px-4 sm:px-5 gap-3 flex-shrink-0">
+        <h1 className="text-sm sm:text-base font-semibold text-foreground">Models</h1>
         {models && (
           <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-            {filtered.length} of {models.length}
+            {filtered.length} / {models.length}
           </span>
         )}
-        <div className="ml-auto relative w-72">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <div className="ml-auto relative flex-1 sm:flex-none sm:w-64">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
           <input
             data-testid="input-model-search"
             type="search"
-            placeholder="Search models..."
+            placeholder="Search..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-8 py-1.5 rounded-lg border border-input bg-background text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="w-full pl-8 pr-7 py-1.5 rounded-lg border border-input bg-background text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
           />
           {search && (
             <button onClick={() => setSearch("")} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -79,18 +80,19 @@ export default function Models() {
         </div>
       </div>
 
+      {/* List */}
       <div className="flex-1 overflow-y-auto scrollbar-thin">
         {isLoading && (
-          <div className="p-6 space-y-2">
+          <div className="p-4 space-y-2">
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="h-16 rounded-lg bg-muted animate-pulse" />
+              <div key={i} className="h-14 rounded-lg bg-muted animate-pulse" />
             ))}
           </div>
         )}
 
         {error && (
-          <div className="p-6">
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive">
+          <div className="p-4 sm:p-6">
+            <div className="flex items-start gap-3 p-4 rounded-xl bg-destructive/10 border border-destructive/20 text-destructive">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
               <div>
                 <p className="font-medium text-sm">Failed to load models</p>
@@ -105,7 +107,7 @@ export default function Models() {
         )}
 
         {!isLoading && filtered.length > 0 && (
-          <div className="p-4 space-y-1.5">
+          <div className="p-3 sm:p-4 space-y-1.5">
             {filtered.map(model => (
               <ModelRow
                 key={model.id}
@@ -138,10 +140,10 @@ function ModelRow({
     <div
       data-testid={`card-model-${model.id}`}
       onClick={onSelect}
-      className={`group flex items-center gap-4 px-4 py-3 rounded-lg border cursor-pointer transition-all ${
+      className={`group flex items-center gap-3 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl border cursor-pointer transition-all ${
         isSelected
           ? "border-primary bg-primary/5"
-          : "border-card-border bg-card hover:border-primary/40 hover:bg-card"
+          : "border-card-border bg-card hover:border-primary/40"
       }`}
     >
       <div className="w-8 h-8 rounded-md bg-muted flex items-center justify-center flex-shrink-0 text-xs font-bold text-muted-foreground uppercase">
@@ -156,8 +158,13 @@ function ModelRow({
             </span>
           )}
         </div>
-        <p className="text-xs text-muted-foreground font-mono truncate">{model.id}</p>
+        <p className="text-xs text-muted-foreground font-mono truncate hidden sm:block">{model.id}</p>
+        {/* Mobile-only compact pricing */}
+        <p className="text-xs text-muted-foreground sm:hidden">
+          {inputPrice} in · {outputPrice} out
+        </p>
       </div>
+      {/* Desktop pricing columns */}
       <div className="hidden sm:flex items-center gap-4 text-xs text-muted-foreground flex-shrink-0">
         <div className="text-right">
           <p className="text-foreground font-medium">{formatContextLength(model.context_length)}</p>

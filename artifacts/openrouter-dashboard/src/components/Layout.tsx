@@ -18,7 +18,9 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">
-      <aside className="w-56 flex-shrink-0 bg-sidebar border-r border-sidebar-border flex flex-col">
+
+      {/* ── Desktop sidebar ─────────────────────────────────────────── */}
+      <aside className="hidden md:flex w-56 flex-shrink-0 bg-sidebar border-r border-sidebar-border flex-col">
         <div className="h-14 flex items-center gap-2.5 px-4 border-b border-sidebar-border">
           <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
             <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
@@ -34,7 +36,7 @@ export default function Layout({ children }: LayoutProps) {
                 key={path}
                 onClick={() => setLocation(path)}
                 data-testid={`nav-${label.toLowerCase()}`}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive
                     ? "bg-sidebar-primary text-sidebar-primary-foreground"
                     : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
@@ -59,9 +61,49 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </aside>
 
-      <main className="flex-1 overflow-hidden flex flex-col">
+      {/* ── Mobile top header ────────────────────────────────────────── */}
+      <div className="md:hidden fixed top-0 inset-x-0 z-30 h-12 flex items-center justify-between px-4 bg-sidebar border-b border-sidebar-border">
+        <div className="flex items-center gap-2">
+          <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
+            <Zap className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
+          </div>
+          <span className="font-semibold text-sidebar-foreground text-sm tracking-tight">OpenRouter</span>
+        </div>
+        <button
+          data-testid="toggle-theme-mobile"
+          onClick={toggleTheme}
+          className="w-8 h-8 rounded-md flex items-center justify-center text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-colors"
+        >
+          {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        </button>
+      </div>
+
+      {/* ── Main content ─────────────────────────────────────────────── */}
+      <main className="flex-1 overflow-hidden flex flex-col pt-12 md:pt-0 pb-16 md:pb-0">
         {children}
       </main>
+
+      {/* ── Mobile bottom navigation ─────────────────────────────────── */}
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 h-16 bg-sidebar border-t border-sidebar-border flex items-center">
+        {navItems.map(({ path, icon: Icon, label }) => {
+          const isActive = path === "/" ? location === "/" : location.startsWith(path);
+          return (
+            <button
+              key={path}
+              onClick={() => setLocation(path)}
+              data-testid={`nav-mobile-${label.toLowerCase()}`}
+              className={`flex-1 flex flex-col items-center justify-center gap-1 py-2 transition-colors ${
+                isActive
+                  ? "text-primary"
+                  : "text-sidebar-foreground/50 hover:text-sidebar-foreground"
+              }`}
+            >
+              <Icon className="w-5 h-5" />
+              <span className="text-[10px] font-medium leading-none">{label}</span>
+            </button>
+          );
+        })}
+      </nav>
     </div>
   );
 }

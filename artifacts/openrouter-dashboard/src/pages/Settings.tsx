@@ -33,16 +33,19 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto">
-      <div className="max-w-2xl mx-auto px-6 py-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground">Settings</h1>
+    <div className="flex-1 overflow-y-auto scrollbar-thin">
+      <div className="max-w-2xl mx-auto px-4 sm:px-6 py-5 sm:py-8">
+
+        {/* Page header */}
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground">Settings</h1>
           <p className="mt-1 text-sm text-muted-foreground">Configure your OpenRouter API connection</p>
         </div>
 
-        <div className="bg-card border border-card-border rounded-xl p-6 space-y-5">
+        {/* API Key card */}
+        <div className="bg-card border border-card-border rounded-xl p-4 sm:p-6 space-y-5">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
               <Key className="w-5 h-5 text-primary" />
             </div>
             <div>
@@ -65,7 +68,7 @@ export default function Settings() {
               <button
                 data-testid="toggle-show-key"
                 onClick={() => setShowKey(v => !v)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors p-1"
               >
                 {showKey ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -84,12 +87,12 @@ export default function Settings() {
               </div>
             )}
 
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 data-testid="button-save-key"
                 onClick={handleSave}
                 disabled={status === "testing" || !inputValue.trim()}
-                className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 sm:flex-none px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {status === "testing" ? "Verifying..." : "Save & Verify"}
               </button>
@@ -97,7 +100,7 @@ export default function Settings() {
                 <button
                   data-testid="button-clear-key"
                   onClick={handleClear}
-                  className="px-4 py-2 rounded-lg border border-input text-sm font-medium text-foreground hover:bg-secondary transition-colors"
+                  className="flex-1 sm:flex-none px-4 py-2 rounded-lg border border-input text-sm font-medium text-foreground hover:bg-secondary transition-colors"
                 >
                   Clear
                 </button>
@@ -119,18 +122,19 @@ export default function Settings() {
           </div>
         </div>
 
-        <div className="mt-6 bg-card border border-card-border rounded-xl p-6">
+        {/* About card */}
+        <div className="mt-4 sm:mt-6 bg-card border border-card-border rounded-xl p-4 sm:p-6">
           <h2 className="font-semibold text-foreground mb-3">About</h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            This dashboard connects directly to the OpenRouter API from your browser. Your API key is stored locally in your browser and never sent to any server other than openrouter.ai.
+            This dashboard connects directly to the OpenRouter API from your browser. Your API key is stored locally and never sent anywhere except openrouter.ai.
           </p>
           <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
             <div>
-              <span className="text-muted-foreground">Endpoint</span>
-              <p className="font-mono text-xs mt-0.5 text-foreground">openrouter.ai/api/v1</p>
+              <span className="text-muted-foreground text-xs">Endpoint</span>
+              <p className="font-mono text-xs mt-0.5 text-foreground break-all">openrouter.ai/api/v1</p>
             </div>
             <div>
-              <span className="text-muted-foreground">Key storage</span>
+              <span className="text-muted-foreground text-xs">Key storage</span>
               <p className="text-xs mt-0.5 text-foreground">Browser localStorage</p>
             </div>
           </div>
