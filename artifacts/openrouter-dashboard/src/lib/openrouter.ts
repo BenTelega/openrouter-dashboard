@@ -259,7 +259,7 @@ export async function chatCompletion(
       Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
       "HTTP-Referer": window.location.origin,
-      "X-Title": "OpenRouter Dashboard",
+      "X-Title": "Bentelega",
     },
     body: JSON.stringify({ model, messages, stream }),
   });
@@ -285,7 +285,7 @@ export async function chatCompletionStream(
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
         "HTTP-Referer": window.location.origin,
-        "X-Title": "OpenRouter Dashboard",
+        "X-Title": "Bentelega",
       },
       body: JSON.stringify({ model, messages, stream: true }),
     });

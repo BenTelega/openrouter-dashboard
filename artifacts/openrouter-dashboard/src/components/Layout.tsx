@@ -26,7 +26,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="w-7 h-7 rounded-lg bg-primary flex items-center justify-center">
             <Zap className="w-4 h-4 text-white" strokeWidth={2.5} />
           </div>
-          <span className="font-semibold text-sidebar-foreground tracking-tight">OpenRouter</span>
+          <span className="font-semibold text-sidebar-foreground tracking-tight">Bentelega</span>
         </div>
 
         <nav className="flex-1 py-3 px-2 space-y-0.5">
@@ -68,7 +68,7 @@ export default function Layout({ children }: LayoutProps) {
           <div className="w-6 h-6 rounded-md bg-primary flex items-center justify-center">
             <Zap className="w-3.5 h-3.5 text-white" strokeWidth={2.5} />
           </div>
-          <span className="font-semibold text-sidebar-foreground text-sm tracking-tight">OpenRouter</span>
+          <span className="font-semibold text-sidebar-foreground text-sm tracking-tight">Bentelega</span>
         </div>
         <button
           data-testid="toggle-theme-mobile"
